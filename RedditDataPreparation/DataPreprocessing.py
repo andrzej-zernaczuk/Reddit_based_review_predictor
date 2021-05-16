@@ -10,11 +10,11 @@ class DataPreprocesser:
 
         self.data = data
         self.text_col = text_col
-        nltk.download('stopwords')
+        # nltk.download('stopwords')
 
     @staticmethod
     def initial_data_prep(text):
-        text = text.str.lower()
+        text = text.lower()
         # Replace new rows with space
         text = text.replace('\n', " ").replace("\r", " ")
         # Create list of all not needed chars
@@ -55,7 +55,7 @@ class DataPreprocesser:
         return data
 
 
-    def tokenize(self, data, text_col, num_words_pad):
+    def tokenize(self, data, text_col, num_words_pad=100):
         # Initialize tokenizer
         with open('Data/tokenizer.pickle', 'rb') as handle:
             tok = pickle.load(handle)
@@ -67,3 +67,8 @@ class DataPreprocesser:
 
         return tf_df
 
+    def full_prepare_data(self, data, text_col):
+        # Clean the data
+        clean_data = self.clean_data(data, text_col)
+        # Return tokenized data
+        return self.tokenize(clean_data, text_col)

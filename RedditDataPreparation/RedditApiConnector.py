@@ -10,14 +10,14 @@ class RedditApiConnector:
         self.subreddit = subreddit
         self.api = PushshiftAPI()
 
-    def search_comments(self, limit=1000, **kwargs):
+    def search_comments(self, limit=1000):
 
         # Hardcode filters to keep same columns in dataframes
         filter = ['author', 'date', 'title', 'body', 'score']
 
         # Connect to api, and get data
         comments = self.api.search_comments(
-            kwargs,subreddit = self.subreddit,
+            subreddit = self.subreddit,
             filter=filter, q=self.name, limit=limit
         )
         # Prepare dataframe
@@ -25,12 +25,12 @@ class RedditApiConnector:
 
         return df
 
-    def search_submissions(self, limit=1000, **kwargs):
+    def search_submissions(self, limit=1000):
         # Hardcode filters to keep same columns in dataframes
         filer = ['author', 'date', 'title', 'selftext', 'score']
 
         submissions = self.api.search_submissions(
-            kwargs, subreddit=self.subreddit,
+            subreddit=self.subreddit,
             filer=filer, q=self.name, limit=limit
         )
 
@@ -41,3 +41,6 @@ class RedditApiConnector:
         df['body'].replace(['removed'], np.NaN, inplace=True)
 
         return df
+
+a = RedditApiConnector(name='Star Wars', subreddit='movies')
+print(a.search_comments())
