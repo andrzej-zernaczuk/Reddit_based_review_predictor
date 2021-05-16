@@ -1,9 +1,8 @@
 import tensorflow as tf
-
 class FirstCNN:
 
     def __init__(self):
-        self.model = tf.keras.models.load_model('../first_model')
+        self.model = tf.keras.models.load_model('first_model')
         """
         Model architecture:
         model = Sequential(
@@ -39,8 +38,8 @@ class FirstCNN:
         """
 
     def predict_sentiment(self, tf_df):
+        print(tf_df)
+        print(tf_df.shape)
         predictions = self.model.predict(tf_df)
-        mean = predictions.mean()
-
-        return predictions, mean
+        return predictions
 
