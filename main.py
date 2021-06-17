@@ -29,11 +29,27 @@ class RedditBasedPredictor:
         return np.average(preds, weights=weights_reshape)
 
 
-class ErrorMeasuring:
+class DataHandling:
 
     def preparing_data(self):
         global df
-        df = pd.read_json('Filmweb_top50.json')
+        df = pd.read_csv('Filmweb_top50.csv', index_col=0)
+        df['imdbRating'] = (df['imdbRating'].str.replace('/10', '').astype(float)) / 10
+        df['rottenTomatoes'] = df['rottenTomatoes'].str.replace('%', '').astype(float) / 100
+        df['metacritic'] = df['metacritic'].str.replace('/100', '').astype(float) / 100
+
+    def error_measuring(self):
+        titleFromPrediction = "Joker"
+        scoreFromPrediction = 0.90
+
+        errorIMDB = round(abs((scoreFromPrediction - df.loc[titleFromPrediction, 'imdbRating']) * 100), 2)
+        errorRotten = round(abs((scoreFromPrediction - df.loc[titleFromPrediction, 'rottenTomatoes']) * 100), 2)
+        errorMetacritic = round(abs((scoreFromPrediction - df.loc[titleFromPrediction, 'metacritic']) * 100), 2)
+
+        print(errorIMDB)
+        print(errorRotten)
+        print(errorMetacritic)
+
 
 
 # XDDDD TE WYNIKI TAKIE NIE ZA DOBRE
