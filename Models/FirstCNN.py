@@ -2,7 +2,7 @@ import tensorflow as tf
 class FirstCNN:
 
     def __init__(self):
-        self.model = tf.keras.models.load_model('first_model')
+        self.model = tf.keras.models.load_model('rnn')
         """
         Model architecture:
         model = Sequential(
