@@ -1,17 +1,15 @@
 import pandas as pd
 from psaw import PushshiftAPI
-import numpy as np
+
 
 class RedditApiConnector:
 
-    def __init__(self, name, subreddit):
-
-        self.name = name
+    def __init__(self, subreddit='movies'):
         self.subreddit = subreddit
         self.api = PushshiftAPI()
 
-    def search_comments(self, limit=1000):
-
+    def search_comments(self, name, limit=1000):
+        self.name = name
         # Hardcode filters to keep same columns in dataframes
         filter = ['author', 'date', 'title', 'body', 'score']
 
@@ -25,22 +23,22 @@ class RedditApiConnector:
 
         return df
 
-    def search_submissions(self, limit=1000):
-        # Hardcode filters to keep same columns in dataframes
-        filer = ['author', 'date', 'title', 'selftext', 'score']
+    # def search_submissions(self, limit=1000):
+    #     # Hardcode filters to keep same columns in dataframes
+    #     filer = ['author', 'date', 'title', 'selftext', 'score']
+    #
+    #     submissions = self.api.search_submissions(
+    #         subreddit=self.subreddit,
+    #         filer=filer, q=self.name, limit=limit
+    #     )
+    #
+    #     df = pd.DataFrame([submission.d_ for submission in submissions])
+    #     # Rename columns to keep all dataframes same
+    #     df.rename(columns={'selftext': 'body'}, inplace=True)
+    #     # Replace '[removed]' with NaN values
+    #     df['body'].replace(['removed'], np.NaN, inplace=True)
+    #
+    #     return df
 
-        submissions = self.api.search_submissions(
-            subreddit=self.subreddit,
-            filer=filer, q=self.name, limit=limit
-        )
-
-        df = pd.DataFrame([submission.d_ for submission in submissions])
-        # Rename columns to keep all dataframes same
-        df.rename(columns={'selftext': 'body'}, inplace=True)
-        # Replace '[removed]' with NaN values
-        df['body'].replace(['removed'], np.NaN, inplace=True)
-
-        return df
-
-a = RedditApiConnector(name='Star Wars', subreddit='movies')
-print(a.search_comments())
+a = RedditApiConnector()
+print(a.search_comments(name='Star Wars'))
