@@ -32,25 +32,34 @@ class RedditBasedPredictor:
 class DataHandling:
 
     def preparing_data(self):
-        global df
-        df = pd.read_csv('Filmweb_top50.csv', index_col=0)
-        df['imdbRating'] = (df['imdbRating'].str.replace('/10', '').astype(float)) / 10
-        df['rottenTomatoes'] = df['rottenTomatoes'].str.replace('%', '').astype(float) / 100
-        df['metacritic'] = df['metacritic'].str.replace('/100', '').astype(float) / 100
+        top50 = pd.read_csv('Filmweb_top50.csv', index_col=0)
+        top50['imdb'] = (top50['imdb'].str.replace('/10', '').astype(float)) / 10
+        top50['rottenTomatoes'] = top50['rottenTomatoes'].str.replace('%', '').astype(float) / 100
+        top50['metacritic'] = top50['metacritic'].str.replace('/100', '').astype(float) / 100
+
+        columns = ['title', 'year', 'prediction', 'imdb', 'errorIMDB', 'rottenTomatoes', 'errorRotten', 'metacritic',
+                     'errorMetacritic']
+        result_df = pd.DataFrame(columns=columns)
+        result_df = result_df.set_index('title')
 
     def error_measuring(self):
         titleFromPrediction = "Joker"
-        scoreFromPrediction = 0.90
+        resultFromPrediction = 0.90
 
-        errorIMDB = round(abs((scoreFromPrediction - df.loc[titleFromPrediction, 'imdbRating']) * 100), 2)
-        errorRotten = round(abs((scoreFromPrediction - df.loc[titleFromPrediction, 'rottenTomatoes']) * 100), 2)
-        errorMetacritic = round(abs((scoreFromPrediction - df.loc[titleFromPrediction, 'metacritic']) * 100), 2)
+        errorIMDB = round(abs((resultFromPrediction - top50.loc[titleFromPrediction, 'imdb']) * 100), 2)
+        errorRotten = round(abs((resultFromPrediction - top50.loc[titleFromPrediction, 'rottenTomatoes']) * 100), 2)
+        errorMetacritic = round(abs((resultFromPrediction - top50.loc[titleFromPrediction, 'metacritic']) * 100), 2)
 
-        print(errorIMDB)
-        print(errorRotten)
-        print(errorMetacritic)
+        data = [titleFromPrediction, top50.loc[titleFromPrediction, 'year'], resultFromPrediction,
+                top50.loc[titleFromPrediction, 'imdb'], errorIMDB, top50.loc[titleFromPrediction, 'rottenTomatoes'],
+                errorRotten, top50.loc[titleFromPrediction, 'metacritic'], errorMetacritic]
 
+        columns = ['title', 'year', 'prediction', 'imdb', 'errorIMDB', 'rottenTomatoes', 'errorRotten', 'metacritic',
+                   'errorMetacritic']
 
+        data_df = pd.DataFrame([data], columns=columns)
+        data_df = data_df.set_index('title')
+        result_df = result_df.append(data_df)
 
 # XDDDD TE WYNIKI TAKIE NIE ZA DOBRE
 # ZMIENIC DLUGOSC TENSORA PO TOKENIZACJI BO W TRENOWANYM DATASECIE BYLY PONAD 100 A TUTAJ SREDNIA TO 48
