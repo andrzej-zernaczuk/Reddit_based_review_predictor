@@ -55,9 +55,9 @@ class DataPreprocesser:
         return data
 
 
-    def tokenize(self, data, text_col, num_words_pad=100):
+    def tokenize(self, data, text_col, num_words_pad=300):
         # Initialize tokenizer
-        with open('Data/tokenizer.pickle', 'rb') as handle:
+        with open('Data/tok.pkl', 'rb') as handle:
             tok = pickle.load(handle)
         seq = tok.texts_to_sequences(list(data[text_col]))
         # Pad sequences to make them same lenght
